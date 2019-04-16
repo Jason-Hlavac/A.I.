@@ -1,21 +1,49 @@
 import numpy as np
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
-def sigmoid_der(x):
-    return x * (1 - x )
-training_inputs = np.array([[0, 0, 1], [1,1,1], [1, 0, 1], [0, 1, 1]])
-training_output = np.array([[0,1,1,0]]).T
-synaptic_weights = 2 * np.random.random((3, 1)) - 1
-print ("Starting synaptic weights:")
-print (synaptic_weights)
 
-for i in range(100000):
-    input_layer = training_inputs
-    outputs = sigmoid(np.dot(input_layer, synaptic_weights))
-    error = training_output - outputs
-    adjustments = error * sigmoid_der(outputs)
-    synaptic_weights += np.dot(input_layer.T, adjustments)
-print ("synaptic weights after training :")
-print(synaptic_weights)
-print("Outputs after training:")
-print(outputs)
+class NeuralNetwork():
+    
+    def __init__(self):
+        np.random.seed(1)
+        self.synaptic_weights = 2 * np.random.random((3, 1)) - 1
+        
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+    def sigmoid_der(self, x):
+        return x * (1 - x )
+    def train(self, training_input, training_outputs, training_iteration):
+        for iteration in range(training_iteration):
+            output = self.think(training_inputs)
+            error = training_output - output
+            adjustments = np.dot(training_inputs.T, error *self.sigmoid_der(output))
+            self.synaptic_weights += adjustments
+            
+    def think(self, inputs):
+        inputs = inputs.astype(float)
+        output = sigmoid(np.dot(inputs, self.synaptic_weights))
+        
+        return output
+if __name__ == "__main__":
+    neural_network = NeuralNetwork()
+    print("Synaptic Weights before training")
+    print("=" *40)
+    print(neural_network.synaptic_weights)
+    print("=" * 40)
+    
+    training_inputs = np.array([[0, 0, 1], [1,1,1], [1, 0, 1], [0, 1, 1]])
+    training_outputs = np.array([[0,1,1,0]]).T
+    neural_network.train(training_inputs, training_outputs, 10000)
+    
+    
+    print("Synaptic Weights after training")
+    print("=" *40)
+    print(neural_network.synaptic_weights)
+    print("=" * 40)
+    
+    A = str(input("Input  1: "))
+    B = str(input("Input  2: "))
+    C = str(input("Input  3: "))
+    
+    print("New situation: input data",A,B,C)
+    print("Output Data: ")
+    print(neural_network.think(np.array([A,B,C])))
+    
