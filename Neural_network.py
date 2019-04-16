@@ -13,13 +13,13 @@ class NeuralNetwork():
     def train(self, training_input, training_outputs, training_iteration):
         for iteration in range(training_iteration):
             output = self.think(training_inputs)
-            error = training_output - output
+            error = training_outputs - output
             adjustments = np.dot(training_inputs.T, error *self.sigmoid_der(output))
             self.synaptic_weights += adjustments
             
     def think(self, inputs):
         inputs = inputs.astype(float)
-        output = sigmoid(np.dot(inputs, self.synaptic_weights))
+        output = self.sigmoid(np.dot(inputs, self.synaptic_weights))
         
         return output
 if __name__ == "__main__":
